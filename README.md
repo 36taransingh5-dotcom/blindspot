@@ -2,6 +2,8 @@
 
 **Watch an AI use your website blind.**
 
+**Live demo: https://blindspot-flax.vercel.app** (click **Run Blindspot**; a run takes 1–3 minutes)
+
 Give Blindspot a URL and a task ("book a train ticket", "sign up for the newsletter"). An agent tries to finish it the way a blind person would: keyboard only, hearing only what a screen reader says. You watch it live, see exactly where it gets stuck, learn *why*, and get the code that fixes it.
 
 Around 96% of the top million home pages have detectable accessibility failures (WebAIM Million). Rule checkers list hundreds of issues but can't tell you which one actually stops a blind customer from checking out. Blindspot answers that question by trying.
@@ -71,6 +73,8 @@ Headless run from the terminal, printing the whole trace:
 ```bash
 npm run cli -- http://localhost:3210/demo/broken "Book a train ticket from London to Manchester"
 ```
+
+**Vercel** works out of the box: on Vercel the app switches to [`@sparticuz/chromium`](https://github.com/Sparticuz/chromium), a compressed serverless Chromium. Set the env vars below and set Deployment Protection to previews only, so the deployed app can load its own demo pages. A journey stops after `JOURNEY_BUDGET_MS` (default 200 s) to fit the 300 s function limit.
 
 Docker (uses Playwright's image, so Chromium is included):
 

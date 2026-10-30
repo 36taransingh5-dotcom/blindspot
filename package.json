@@ -1,0 +1,32 @@
+{
+  "name": "blindspot",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3210",
+    "build": "next build",
+    "start": "next start -p ${PORT:-3210}",
+    "typecheck": "tsc --noEmit",
+    "models": "tsx --env-file=.env.local scripts/models.mts",
+    "cli": "tsx --env-file=.env.local scripts/run.mts"
+  },
+  "dependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@tavily/core": "^0.7.14",
+    "next": "16.4.3",
+    "openai": "^7.45.1",
+    "playwright-core": "^1.64.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.15",
+    "typescript": "^5"
+  }
+}

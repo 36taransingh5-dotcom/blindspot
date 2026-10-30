@@ -6,6 +6,19 @@ import { findInvisibleClickables } from "../sr/screenreader";
 import { runJourney } from "./journey";
 import { diagnose, runAxe, writeFix } from "./report";
 
+/** Full Chromium locally/in Docker; the compressed serverless build on Vercel. */
+async function launchBrowser(): Promise<Browser> {
+  if (process.env.VERCEL) {
+    const { default: serverless } = await import("@sparticuz/chromium");
+    return chromium.launch({
+      args: [...serverless.args, "--force-renderer-accessibility"],
+      executablePath: await serverless.executablePath(),
+      headless: true,
+    });
+  }
+  return chromium.launch({ args: ["--force-renderer-accessibility"] });
+}
+
 export async function runBlindspot(opts: {
   url: string;
   task: string;
@@ -20,7 +33,7 @@ export async function runBlindspot(opts: {
 
   try {
     emit({ type: "start", url: opts.url, task: opts.task, models: config.models });
-    browser = await chromium.launch({ args: ["--force-renderer-accessibility"] });
+    browser = await launchBrowser();
     const context = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: "reduce" });
     const page = await context.newPage();
     await page.goto(opts.url, { waitUntil: "domcontentloaded", timeout: 30000 });
@@ -33,6 +46,8 @@ export async function runBlindspot(opts: {
       emit,
       onCall,
       signal: opts.signal,
+      // Leave time for audit, diagnosis and fixes inside the host's request limit.
+      deadline: started + config.journeyBudgetMs,
     });
     emit({ type: "journey", outcome: journey.outcome, reason: journey.reason, steps: journey.steps });
     if (opts.signal?.aborted) return;

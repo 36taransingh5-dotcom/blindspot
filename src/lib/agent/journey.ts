@@ -80,6 +80,7 @@ export async function runJourney(opts: {
   emit: (e: StepEvent) => void;
   onCall: (c: ModelCall) => void;
   signal?: AbortSignal;
+  deadline?: number;
 }): Promise<{ outcome: Outcome; reason: string; steps: number; evidenceHtml: string[]; trace: string[] }> {
   const { page } = opts;
   const sr = await ScreenReader.attach(page);
@@ -112,6 +113,9 @@ export async function runJourney(opts: {
 
     for (let n = 1; n <= opts.maxSteps; n++) {
       if (opts.signal?.aborted) return { outcome: "gave_up", reason: "Run cancelled", steps: n - 1, evidenceHtml: [...evidenceHtml], trace };
+      if (opts.deadline && Date.now() > opts.deadline) {
+        return { outcome: "gave_up", reason: `Ran out of time after ${n - 1} steps without finishing the task`, steps: n - 1, evidenceHtml: [...evidenceHtml], trace };
+      }
 
       const recent = history.slice(-14).map((h, i, arr) => `${n - arr.length + i}. ${describeAction(h.action)} -> heard: "${h.heard}"`).join("\n");
       const warning = stuckWarning(history);

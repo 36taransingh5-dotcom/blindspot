@@ -10,6 +10,7 @@ export const config = {
   } satisfies Record<ModelRole, string>,
   tavilyApiKey: process.env.TAVILY_API_KEY ?? "",
   maxSteps: Number(process.env.MAX_STEPS || 30),
+  journeyBudgetMs: Number(process.env.JOURNEY_BUDGET_MS || 200_000),
 };
 
 /** Human label for a role, shown on every model badge in the UI. */

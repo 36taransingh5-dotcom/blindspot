@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@axe-core/playwright": "^4.14.0",
+    "@sparticuz/chromium": "^153.0.0",
     "@tavily/core": "^0.7.14",
     "next": "16.4.3",
     "openai": "^7.45.1",
